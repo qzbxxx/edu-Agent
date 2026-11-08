@@ -4,7 +4,7 @@
 {"id": "q04", "query": "七天无理由退款是怎么规定的？", "expect": "answer", "expect_source": "edu_policy.pdf", "expect_page": 1, "must_contain": ["7 个自然日"]}
 {"id": "q05", "query": "学习进度超过多少就不能全额退款了？", "expect": "answer", "expect_source": "edu_policy.pdf", "expect_page": 1, "must_contain": ["10%"]}
 {"id": "q06", "query": "买了20天还能申请退款吗？", "expect": "answer", "expect_source": "edu_policy.pdf", "expect_page": 1, "must_contain": ["人工"]}
-{"id": "q07", "query": "课程的学习周期是多久？", "expect": "answer", "expect_source": "edu_policy.pdf", "expect_page": 1, "must_contain": ["3 个月"]}
+{"id": "q07", "query": "Python 高级架构师训练营的学习周期是多久？", "expect": "answer", "expect_source": "edu_policy.pdf", "expect_page": 1, "must_contain": ["3个月"], "note": "课程学习周期；加课程名避免多课程语料下歧义"}
 {"id": "q08", "query": "课程大纲里包含分布式和微服务吗？", "expect": "answer", "expect_source": "edu_policy.pdf", "expect_page": 1, "must_contain": ["分布式"]}
 {"id": "q09", "query": "退款之后钱退到哪里？", "expect": "answer", "expect_source": "edu_policy.pdf", "expect_page": 1, "must_contain": ["原路退回"]}
 {"id": "q10", "query": "你们客服都能回答哪些方面的问题？", "expect": "answer", "expect_source": "edu_policy.pdf", "expect_page": 2, "must_contain": ["课程"]}

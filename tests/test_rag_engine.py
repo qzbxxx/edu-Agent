@@ -22,3 +22,11 @@ def test_article_number_hit_is_strong_evidence():
         else:
             assert c["rerank_score"] < 0.35
 
+
+def test_question_words_do_not_dilute_query_terms():
+    # “哪个/多少”不携带业务信息，若留在覆盖率分母里，会把两个课程切片都压到阈值以下
+    terms = extract_query_terms("Python 高级架构师和 AIGC 全栈营，哪个更贵？贵多少？")
+    assert "Python" in terms
+    assert "AIGC" in terms
+    assert "哪个" not in terms
+    assert "多少" not in terms

@@ -125,7 +125,9 @@ def query_rewrite_node(state: AgentState):
 # 5. 咨询问答节点（结合 短期上下文 + 长期画像 + 知识库切片）
 def consult_rag_node(state: AgentState):
     search_query = state.get("rewritten_query") or state["messages"][-1].content
-    matched_chunks = search_knowledge_base(search_query, top_n=2)
+    # 4 条而不是 2 条：跨切片问题（比较两个课程价格、AIGC 大纲 + Function Calling）
+    # 需要多个相邻切片才能拼出完整事实，只取 2 条会让模型在缺半边证据时下结论。
+    matched_chunks = search_knowledge_base(search_query, top_n=4)
     
     if not matched_chunks:
         fallback_msg = "抱歉，关于该问题，官方文档与知识库中未检索到明确记录，已为您转接人工顾问处理。"
@@ -175,7 +177,9 @@ def consult_rag_node(state: AgentState):
 要求：
 1. 答案必须完全基于参考文档，严禁自行发挥和捏造。
 2. 结合学员的画像背景给出贴合语境的建议。
-3. 在引用的每一个关键事实语句后方，必须打上引用来源标记，例如 [《文件名》第X页]。"""
+3. 在引用的每一个关键事实语句后方，必须打上引用来源标记，例如 [《文件名》第X页]。
+4. 如果用户问题只点名了一门课程（例如“Python 高级架构师训练营”），只使用该课程对应的事实；其他课程的学习周期、价格、适合人群不得混入答案。
+5. 如果参考文档没有直接回答用户所问的事项，明确说“文档未提及”，不要拿其他事项的规则来替代或补充。"""
 
     res = llm.invoke([HumanMessage(content=rag_prompt)]).content
     

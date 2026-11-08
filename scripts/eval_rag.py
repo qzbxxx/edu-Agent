@@ -106,7 +106,7 @@ def contains_banned(answer, phrase):
         index = text.find(target, start)
         if index == -1:
             return False
-        prefix = text[max(0, index - 4):index]
+        prefix = text[max(0, index - 8):index]
         if not any(word in prefix for word in NEGATION_WORDS):
             return True
         start = index + len(target)

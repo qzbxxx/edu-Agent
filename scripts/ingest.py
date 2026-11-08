@@ -1,27 +1,50 @@
 # scripts/ingest.py
 import os
-import glob
+from pathlib import Path
+
 import chromadb
 from langchain_community.document_loaders import PyPDFLoader
+from langchain_core.documents import Document
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA_DIR = os.path.join(BASE_DIR, "data")
+DATA_PATH = Path(DATA_DIR)
 PERSIST_DIR = os.path.join(BASE_DIR, "chroma_db")
 MD_OUTPUT_PATH = os.path.join(DATA_DIR, "processed_chunks.md")
 
+
+def load_document(path: Path):
+    """按扩展名加载文档：PDF 保留分页，TXT 当作单页资料。"""
+    if path.suffix.lower() == ".pdf":
+        return PyPDFLoader(str(path)).load()
+    text = path.read_text(encoding="utf-8")
+    return [Document(page_content=text, metadata={"source": path.name, "page": 0})]
+
+
 def build_multi_pdf_knowledge_base():
-    # 1. 扫描 data/ 目录下的所有 PDF 文件
-    pdf_files = glob.glob(os.path.join(DATA_DIR, "*.pdf"))
-    if not pdf_files:
-        print(f"❌ 错误: 在 {DATA_DIR} 目录下未找到任何 .pdf 文件！")
+    # 1. 递归扫描 data/ 下的 PDF 和 TXT，干扰文档放在子目录也能被纳入
+    pdf_files = sorted(DATA_PATH.rglob("*.pdf"))
+    txt_files = sorted(DATA_PATH.rglob("*.txt"))
+    source_files = pdf_files + txt_files
+
+    # 这份 PDF 是另一所化妆学校的招生指南，只作为人工对照，不进入业务知识库。
+    # 否则客服会把“怎么选化妆学校老师”当成课程问题回答。
+    skip_files = {"teacher_faculty.pdf"}
+    source_files = [path for path in source_files if path.name not in skip_files]
+    pdf_files = [path for path in pdf_files if path.name not in skip_files]
+    txt_files = [path for path in txt_files if path.name not in skip_files]
+
+    if not source_files:
+        print(f"❌ 错误: 在 {DATA_DIR} 目录下未找到任何 .pdf 或 .txt 文件！")
         return
 
-    print("="*65)
-    print(f"📚 开始批量知识库构建，共检测到 {len(pdf_files)} 个 PDF 规章文件：")
-    for p in pdf_files:
-        print(f"   -> 发现文档: {os.path.basename(p)}")
-    print("="*65)
+    print("=" * 65)
+    print(f"📚 开始批量知识库构建，共检测到 {len(source_files)} 个文档"
+          f"（PDF {len(pdf_files)} / TXT {len(txt_files)}）：")
+    for path in source_files:
+        print(f"   -> 发现文档: {path.relative_to(DATA_PATH)}")
+    print("=" * 65)
 
     all_splits = []
     text_splitter = RecursiveCharacterTextSplitter(
@@ -31,20 +54,18 @@ def build_multi_pdf_knowledge_base():
     )
 
     # 2. 逐一解析并切分
-    for pdf_path in pdf_files:
-        filename = os.path.basename(pdf_path)
-        print(f"🔄 正在解析并语义切片: {filename} ...")
+    for path in source_files:
+        print(f"🔄 正在解析并语义切片: {path.name} ...")
         try:
-            loader = PyPDFLoader(pdf_path)
-            docs = loader.load()
+            docs = load_document(path)
             splits = text_splitter.split_documents(docs)
-            for s in splits:
-                # 记录归属的文件名
-                s.metadata["source_file"] = filename
+            for split in splits:
+                # 记录归属的文件名；引用展示用 basename
+                split.metadata["source_file"] = path.name
             all_splits.extend(splits)
             print(f"   -> 成功提取 {len(splits)} 个切片。")
-        except Exception as e:
-            print(f"   ❌ 解析 {filename} 失败: {e}")
+        except Exception as error:
+            print(f"   ❌ 解析 {path.name} 失败: {error}")
 
     print(f"\n 全量文档切分完毕！总计生成 {len(all_splits)} 个知识切片。")
 
@@ -86,7 +107,7 @@ def build_multi_pdf_knowledge_base():
         metadatas=metadatas,
         ids=ids
     )
-    print("🎉 多 PDF 知识库构建完毕！向量索引已刷新。\n")
+    print("🎉 多文档知识库构建完毕！向量索引已刷新。\n")
 
 if __name__ == "__main__":
     build_multi_pdf_knowledge_base()

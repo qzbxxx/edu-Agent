@@ -10,6 +10,13 @@ PERSIST_DIR = os.path.join(BASE_DIR, "chroma_db")
 # 条款号查询（"第 3 条"）在 jieba 里会被拆成单字，需要单独保留
 ARTICLE_PATTERN = re.compile(r"第\s*\d+\s*条")
 
+# 疑问词、人称词不携带业务信息，留在覆盖率分母里会稀释真正的关键词。
+# 例如"哪个更贵"会把两个价格切片都压到阈值以下，导致跨切片比较题直接漏召回。
+QUERY_STOPWORDS = {
+    "哪个", "哪些", "什么", "怎么", "怎样", "如何", "为什么",
+    "多少", "分别", "吗", "呢", "请问", "你们", "我们",
+}
+
 
 def tokenize(text: str):
     """BM25 统一分词：先去空白，再补回"第3条"这种条款号 token。"""
@@ -130,7 +137,7 @@ def extract_query_terms(query: str):
     terms = []
     for token in jieba.cut(query):
         token = token.strip()
-        if len(token) > 1:
+        if len(token) > 1 and token not in QUERY_STOPWORDS:
             terms.append(token)
 
     for match in ARTICLE_PATTERN.findall(query):
@@ -192,8 +199,8 @@ def apply_reranker(query: str, candidates: list):
 def search_knowledge_base(query: str, top_n: int = 2, threshold: float = 0.35):
     """
     【工业级对外统一接口】
-    1. 双路并行召回 (Dense Top 8 + Sparse Top 8)
-    2. RRF 倒数排名融合 (初步去重粗排)
+    1. 双路并行召回 (Dense Top 10 + Sparse Top 10)
+    2. RRF 倒数排名融合 (初步去重粗排，保留前 12 条进入精排)
     3. 精排打分器打分 (Rerank Scoring，含绝对关键词覆盖率与条款号强证据)
     4. 动态置信度截断 (低于 threshold 的切片直接丢弃，不交给大模型，从源头阻断幻觉)
 
@@ -202,11 +209,13 @@ def search_knowledge_base(query: str, top_n: int = 2, threshold: float = 0.35):
     若你的业务问句口语化严重（同义词多），可以降到 0.30；反之可提到 0.45。
     """
     # 1. 双路粗排
-    dense_candidates = dense_search(query, top_k=8)
-    sparse_candidates = sparse_search(query, top_k=8)
+    dense_candidates = dense_search(query, top_k=10)
+    sparse_candidates = sparse_search(query, top_k=10)
 
     # 2. 粗排融合
-    fused_candidates = rrf_fusion(dense_candidates, sparse_candidates)[:8]
+    # 融合窗口要比单路 top_k 大：跨切片问题的正确切片常常只在一路里排第 6~10 名，
+    # 如果这里只留 8 条，它会被另一路的 8 条候选挤出局。
+    fused_candidates = rrf_fusion(dense_candidates, sparse_candidates)[:12]
 
     if not fused_candidates:
         return []

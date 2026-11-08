@@ -12,6 +12,8 @@ def test_banned_phrase_ignores_negation():
     # 拒答里的“无法保证就业”不是承诺，不能算幻觉
     assert not contains_banned("我们无法保证就业，课程不承诺包分配", "保证就业")
     assert not contains_banned("不是当天到账，具体以支付平台为准", "当天到账")
+    # 否定词和禁止词之间隔着引号/“没有任何”时，也要能识别
+    assert not contains_banned("参考文档中没有任何“保证就业”的承诺", "保证就业")
 
 
 def test_banned_phrase_catches_positive_claim():
