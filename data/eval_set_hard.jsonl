@@ -1,0 +1,18 @@
+{"id": "h01", "query": "Python 高级架构师和 AIGC 全栈营，哪个更贵？贵多少？", "expect": "answer", "expect_source": "edu_policy.pdf", "expect_page": 1, "must_contain": ["2999", "1999", "1000"], "note": "跨切片比较价格 + 算术"}
+{"id": "h02", "query": "总课时 40 节，已经学了 4 节，还能七天无理由全额退款吗？", "expect": "answer", "expect_source": "edu_policy.pdf", "expect_page": 1, "must_contain": ["10%"], "note": "边界：4/40=10%，未超过上限"}
+{"id": "h03", "query": "40 节课已经学了 5 节，还能走七天无理由全额退款吗？", "expect": "answer", "expect_source": "edu_policy.pdf", "expect_page": 1, "must_contain": ["人工"], "note": "5/40=12.5% 超过 10%，应转人工审核"}
+{"id": "h04", "query": "7 天无理由是从付款当天算，还是从开通课程那天算？", "expect": "answer", "expect_source": "edu_policy.pdf", "expect_page": 1, "must_contain": ["支付"], "note": "起算点：完成订单支付之日"}
+{"id": "h05", "query": "第 7 天当天提交退款申请，还算在 7 天内吗？", "expect": "answer", "expect_source": "edu_policy.pdf", "expect_page": 1, "must_contain": ["第7天"], "note": "第 7 天包含在 7 个自然日内"}
+{"id": "h06", "query": "退款是退回微信，还是退回原来的银行卡？", "expect": "answer", "expect_source": "edu_policy.pdf", "expect_page": 1, "must_contain": ["原路退回"], "note": "退款路径"}
+{"id": "h07", "query": "超过 7 天了，但我突发重大疾病，还能退吗？", "expect": "answer", "expect_source": "edu_policy.pdf", "expect_page": 1, "must_contain": ["人工"], "note": "特殊审批：转人工审核，按未学课时折算"}
+{"id": "h08", "query": "人工审核通过后，是按全额退，还是按未学课时折算？", "expect": "answer", "expect_source": "edu_policy.pdf", "expect_page": 1, "must_contain": ["未学课时"], "note": "人工审批后的退费口径"}
+{"id": "h09", "query": "AIGC 课程会讲 RAG 和 Function Calling 吗？", "expect": "answer", "expect_source": "edu_policy.pdf", "expect_page": 1, "must_contain": ["RAG", "Function Calling"], "note": "跨切片：AIGC 大纲 + Function Calling 在下一片"}
+{"id": "h10", "query": "第 3 条和第 4 条分别规定了什么？", "expect": "answer", "expect_source": "edu_policy.pdf", "expect_page": 1, "must_contain": ["7", "10%", "人工"], "note": "多跳：无理由退款 vs 高风险人工审批"}
+{"id": "h11", "query": "付款后第 8 天，学习进度还是 0，可以全额退款吗？", "expect": "answer", "expect_source": "edu_policy.pdf", "expect_page": 1, "must_contain": ["人工"], "note": "超 7 天，即使 0 进度也不能自动退"}
+{"id": "h12", "query": "你们有线下班吗？", "expect": "refuse", "note": "文档未收录线下班，不能编"}
+{"id": "h13", "query": "报名后可以开发票吗？", "expect": "refuse", "note": "文档未收录发票，不能编"}
+{"id": "h14", "query": "学完能保证就业吗？", "expect": "refuse", "must_not_contain": ["包就业", "100%就业", "保证就业"], "note": "文档未承诺就业；否定句不算幻觉"}
+{"id": "h15", "query": "退款申请提交后多久能到账？", "expect": "refuse", "expect_source": "edu_policy.pdf", "expect_page": 1, "must_not_contain": ["1-3个工作日", "3-5个工作日", "24小时内", "当天到账", "T+1"], "note": "文档只写原路退回，未承诺到账时效"}
+{"id": "h16", "query": "客服能帮我代写期末作业吗？", "expect": "refuse", "expect_source": "edu_policy.pdf", "expect_page": 2, "must_not_contain": ["可以代写", "帮你代写", "代写服务"], "note": "第 5 条明确禁止代写"}
+{"id": "h17", "query": "课程大纲里有没有消息队列和高并发缓存？", "expect": "answer", "expect_source": "edu_policy.pdf", "expect_page": 1, "must_contain": ["消息队列", "缓存"], "note": "Python 大纲细节"}
+{"id": "h18", "query": "AIGC 课程适合在校生吗？", "expect": "answer", "expect_source": "edu_policy.pdf", "expect_page": 1, "must_contain": ["在校生"], "note": "AIGC 适合人群"}

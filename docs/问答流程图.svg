@@ -52,7 +52,7 @@
   <text x="340" y="656" text-anchor="middle" font-size="11" fill="#475569">把「它 / 这个课」补全成独立问句；首轮直接跳过</text>
 
   <rect x="60" y="702" width="560" height="62" rx="10" fill="#faf5ff" stroke="#a78bfa" stroke-width="1.5"/>
-  <text x="340" y="728" text-anchor="middle" font-size="13" font-weight="600" fill="#0f172a">2. 双路召回 Top5</text>
+  <text x="340" y="728" text-anchor="middle" font-size="13" font-weight="600" fill="#0f172a">2. 双路召回 Top8</text>
   <text x="340" y="748" text-anchor="middle" font-size="11" fill="#475569">语义向量（Chroma） + 关键词（jieba + BM25）</text>
 
   <rect x="60" y="794" width="560" height="62" rx="10" fill="#faf5ff" stroke="#a78bfa" stroke-width="1.5"/>

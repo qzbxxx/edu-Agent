@@ -1,11 +1,25 @@
 # rag_engine.py
 import os
+import re
 import jieba
 import chromadb
 from rank_bm25 import BM25Okapi
 # 动态定位到项目根目录下的 chroma_db
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PERSIST_DIR = os.path.join(BASE_DIR, "chroma_db")
+# 条款号查询（"第 3 条"）在 jieba 里会被拆成单字，需要单独保留
+ARTICLE_PATTERN = re.compile(r"第\s*\d+\s*条")
+
+
+def tokenize(text: str):
+    """BM25 统一分词：先去空白，再补回"第3条"这种条款号 token。"""
+    compact = "".join(text.split())
+    tokens = list(jieba.cut(compact))
+    for match in ARTICLE_PATTERN.findall(text):
+        term = "".join(match.split())
+        if term not in tokens:
+            tokens.append(term)
+    return tokens
 
 # 1. 连接本地持久化向量库 (Dense 稠密索引)
 client = chromadb.PersistentClient(path=PERSIST_DIR)
@@ -25,7 +39,7 @@ if ALL_DOCS and ALL_DOCS["documents"]:
             "page": ALL_DOCS["metadatas"][i]["page"]
         }
         CHUNKS.append(chunk_data)
-        tokens = list(jieba.cut(chunk_data["content"]))
+        tokens = tokenize(chunk_data["content"])
         TOKENIZED_CORPUS.append(tokens)
 
 bm25 = BM25Okapi(TOKENIZED_CORPUS) if TOKENIZED_CORPUS else None
@@ -54,7 +68,7 @@ def sparse_search(query: str, top_k: int = 5):
     """【粗排阶段 2】Sparse 稀疏关键词精确召回 (BM25)"""
     if not bm25 or not CHUNKS:
         return []
-    query_tokens = list(jieba.cut(query))
+    query_tokens = tokenize(query)
     scores = bm25.get_scores(query_tokens)
     top_indices = sorted(range(len(scores)), key=lambda i: scores[i], reverse=True)[:top_k]
     
@@ -109,12 +123,20 @@ def extract_query_terms(query: str):
     切出用于打分的查询词
     丢弃空白和单字：像"的/了/是/吗"这类单字在任何切片里都高频出现，
     留在分母里会把覆盖率算虚高，让无关切片也能轻松过阈值。
+
+    额外保留"第 3 条""第4条"这类条款号：jieba 会把数字和"条"切成单字，
+    再被上面的规则丢掉，导致"第 3 条和第 4 条分别规定了什么"覆盖率直接归零。
     """
     terms = []
     for token in jieba.cut(query):
         token = token.strip()
         if len(token) > 1:
             terms.append(token)
+
+    for match in ARTICLE_PATTERN.findall(query):
+        term = "".join(match.split())
+        if term not in terms:
+            terms.append(term)
     return terms
 
 
@@ -134,6 +156,7 @@ def apply_reranker(query: str, candidates: list):
         return []
 
     query_terms = extract_query_terms(query)
+    article_terms = ["".join(match.split()) for match in ARTICLE_PATTERN.findall(query)]
     base_max = max(c.get("rrf_score", 0.01) for c in candidates)
 
     for candidate in candidates:
@@ -150,6 +173,11 @@ def apply_reranker(query: str, candidates: list):
         else:
             coverage = 0.0
 
+        # 查询里明确写了“第 N 条”时，命中条款号就是强证据。
+        # “分别规定了什么”这类词在条款正文里通常不会出现，只靠关键词覆盖率会把正确切片误杀。
+        if article_terms and any(term in content for term in article_terms):
+            coverage = max(coverage, 1.0)
+
         # 相对排序：保留双路召回的名次信息，只在排序上起辅助作用
         rank_score = min(candidate.get("rrf_score", 0) / (base_max * 1.05), 1.0)
 
@@ -164,9 +192,9 @@ def apply_reranker(query: str, candidates: list):
 def search_knowledge_base(query: str, top_n: int = 2, threshold: float = 0.35):
     """
     【工业级对外统一接口】
-    1. 双路并行召回 (Dense Top 5 + Sparse Top 5)
+    1. 双路并行召回 (Dense Top 8 + Sparse Top 8)
     2. RRF 倒数排名融合 (初步去重粗排)
-    3. 精排打分器打分 (Rerank Scoring，含绝对关键词覆盖率)
+    3. 精排打分器打分 (Rerank Scoring，含绝对关键词覆盖率与条款号强证据)
     4. 动态置信度截断 (低于 threshold 的切片直接丢弃，不交给大模型，从源头阻断幻觉)
 
     threshold 的含义：0.8 × 覆盖率 + 0.2 × 排名分。
@@ -174,11 +202,11 @@ def search_knowledge_base(query: str, top_n: int = 2, threshold: float = 0.35):
     若你的业务问句口语化严重（同义词多），可以降到 0.30；反之可提到 0.45。
     """
     # 1. 双路粗排
-    dense_candidates = dense_search(query, top_k=5)
-    sparse_candidates = sparse_search(query, top_k=5)
+    dense_candidates = dense_search(query, top_k=8)
+    sparse_candidates = sparse_search(query, top_k=8)
 
     # 2. 粗排融合
-    fused_candidates = rrf_fusion(dense_candidates, sparse_candidates)[:5]
+    fused_candidates = rrf_fusion(dense_candidates, sparse_candidates)[:8]
 
     if not fused_candidates:
         return []
