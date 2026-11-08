@@ -1,0 +1,16 @@
+{"id": "q01", "query": "Python高级架构师训练营多少钱？", "expect": "answer", "expect_source": "edu_policy.pdf", "expect_page": 1, "must_contain": ["1999"]}
+{"id": "q02", "query": "AIGC 商业化全栈实战营的定价是多少？", "expect": "answer", "expect_source": "edu_policy.pdf", "expect_page": 1, "must_contain": ["2999"]}
+{"id": "q03", "query": "Python 架构师课适合什么基础的人学？", "expect": "answer", "expect_source": "edu_policy.pdf", "expect_page": 1, "must_contain": ["1 年以上"]}
+{"id": "q04", "query": "七天无理由退款是怎么规定的？", "expect": "answer", "expect_source": "edu_policy.pdf", "expect_page": 1, "must_contain": ["7 个自然日"]}
+{"id": "q05", "query": "学习进度超过多少就不能全额退款了？", "expect": "answer", "expect_source": "edu_policy.pdf", "expect_page": 1, "must_contain": ["10%"]}
+{"id": "q06", "query": "买了20天还能申请退款吗？", "expect": "answer", "expect_source": "edu_policy.pdf", "expect_page": 1, "must_contain": ["人工"]}
+{"id": "q07", "query": "课程的学习周期是多久？", "expect": "answer", "expect_source": "edu_policy.pdf", "expect_page": 1, "must_contain": ["3 个月"]}
+{"id": "q08", "query": "课程大纲里包含分布式和微服务吗？", "expect": "answer", "expect_source": "edu_policy.pdf", "expect_page": 1, "must_contain": ["分布式"]}
+{"id": "q09", "query": "退款之后钱退到哪里？", "expect": "answer", "expect_source": "edu_policy.pdf", "expect_page": 1, "must_contain": ["原路退回"]}
+{"id": "q10", "query": "你们客服都能回答哪些方面的问题？", "expect": "answer", "expect_source": "edu_policy.pdf", "expect_page": 2, "must_contain": ["课程"]}
+{"id": "q11", "query": "AIGC 课程适合什么样的人？", "expect": "answer", "expect_source": "edu_policy.pdf", "expect_page": 1, "must_contain": ["AI 应用开发"]}
+{"id": "q12", "query": "课程里会讲 LangGraph 的 Agent 实战吗？", "expect": "answer", "expect_source": "edu_policy.pdf", "expect_page": 1, "must_contain": ["LangGraph"]}
+{"id": "q13", "query": "红烧牛肉面怎么做？", "expect": "refuse", "note": "超范围：餐饮"}
+{"id": "q14", "query": "明天北京会下雨吗？", "expect": "refuse", "note": "超范围：天气"}
+{"id": "q15", "query": "帮我代写一份期末作业。", "expect": "refuse", "expect_source": "edu_policy.pdf", "expect_page": 2, "note": "超范围：第5条明确禁止代写，召回该条款是对的"}
+{"id": "q16", "query": "化妆学校怎么选老师？", "expect": "refuse", "note": "跨领域：化妆指南已移出知识库，此处验证不再误召回"}

@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# 环境与密钥（只提交 .env.example）
+.env
+.env.local
+
+# 本地运行产物：会话、画像、退款流水、向量库
+*.db
+*.db-journal
+chroma_db/
+
+# 工具缓存
+.pytest_cache/
+.vscode/
+.idea/
+
+# 日志
+*.log

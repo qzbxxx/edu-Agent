@@ -1,0 +1,187 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1520" height="1890" viewBox="0 0 1520 1890" font-family="'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif">
+  <defs>
+    <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7.5" markerHeight="7.5" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#94a3b8"/>
+    </marker>
+  </defs>
+
+  <rect width="1520" height="1890" fill="#fbfcfe"/>
+
+  <!-- 标题 -->
+  <text x="40" y="52" font-size="26" font-weight="700" fill="#0f172a">智学在线教育 Agent · 全链路流程图</text>
+  <text x="40" y="80" font-size="13.5" fill="#64748b">用户一句话 → 意图路由 → 混合检索 RAG / 退费 HITL → 答案返回；含离线建库、进程装配、长短期记忆与幂等落库</text>
+
+  <!-- ① 离线建库 -->
+  <rect x="24" y="98" width="1472" height="300" rx="16" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1.5"/>
+  <text x="46" y="128" font-size="15" font-weight="700" fill="#166534">① 离线建库 · scripts/ingest.py（知识库变更时运行一次）</text>
+
+  <rect x="48" y="150" width="252" height="80" rx="9" fill="#ffffff" stroke="#86efac" stroke-width="1.5"/>
+  <text x="174" y="184" text-anchor="middle" font-size="14.5" font-weight="600" fill="#0f172a">data/*.pdf</text>
+  <text x="174" y="206" text-anchor="middle" font-size="12" fill="#475569">如 edu_policy.pdf</text>
+  <text x="174" y="224" text-anchor="middle" font-size="11" fill="#94a3b8">子目录 distractors 不入库</text>
+
+  <rect x="324" y="150" width="252" height="80" rx="9" fill="#ffffff" stroke="#86efac" stroke-width="1.5"/>
+  <text x="450" y="184" text-anchor="middle" font-size="13.5" font-weight="600" fill="#0f172a">PyPDFLoader</text>
+  <text x="450" y="206" text-anchor="middle" font-size="12" fill="#475569">逐页解析，每页一个 Document</text>
+
+  <rect x="600" y="150" width="252" height="80" rx="9" fill="#ffffff" stroke="#86efac" stroke-width="1.5"/>
+  <text x="726" y="184" text-anchor="middle" font-size="13" font-weight="600" fill="#0f172a">RecursiveCharacterTextSplitter</text>
+  <text x="726" y="206" text-anchor="middle" font-size="12" fill="#475569">chunk 300 / overlap 50</text>
+  <text x="726" y="224" text-anchor="middle" font-size="11" fill="#94a3b8">按段落 → 句子递归切分</text>
+
+  <rect x="876" y="150" width="252" height="80" rx="9" fill="#ffffff" stroke="#86efac" stroke-width="1.5"/>
+  <text x="1002" y="184" text-anchor="middle" font-size="13.5" font-weight="600" fill="#0f172a">写入切片元数据</text>
+  <text x="1002" y="206" text-anchor="middle" font-size="12" fill="#475569">source_file + page + 1</text>
+
+  <rect x="1152" y="150" width="252" height="80" rx="9" fill="#ffffff" stroke="#86efac" stroke-width="1.5"/>
+  <text x="1278" y="184" text-anchor="middle" font-size="13.5" font-weight="600" fill="#0f172a">重建 Chroma 集合</text>
+  <text x="1278" y="206" text-anchor="middle" font-size="12" fill="#475569">edu_pdf_knowledge（6 片）</text>
+  <text x="1278" y="224" text-anchor="middle" font-size="11" fill="#94a3b8">删除后全量重建，不做增量</text>
+
+  <rect x="876" y="262" width="252" height="58" rx="9" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1.3" stroke-dasharray="5 4"/>
+  <text x="1002" y="288" text-anchor="middle" font-size="12.5" font-weight="600" fill="#334155">data/processed_chunks.md</text>
+  <text x="1002" y="306" text-anchor="middle" font-size="11" fill="#64748b">切片台账 · 供人工审查</text>
+
+  <rect x="1152" y="262" width="252" height="58" rx="9" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1.3" stroke-dasharray="5 4"/>
+  <text x="1278" y="288" text-anchor="middle" font-size="12.5" font-weight="600" fill="#334155">chroma_db/</text>
+  <text x="1278" y="306" text-anchor="middle" font-size="11" fill="#64748b">向量 + 元数据 · 持久化</text>
+
+  <path d="M300 190 H321" stroke="#94a3b8" stroke-width="1.8" fill="none" marker-end="url(#ar)"/>
+  <path d="M576 190 H597" stroke="#94a3b8" stroke-width="1.8" fill="none" marker-end="url(#ar)"/>
+  <path d="M852 190 H873" stroke="#94a3b8" stroke-width="1.8" fill="none" marker-end="url(#ar)"/>
+  <path d="M1128 190 H1149" stroke="#94a3b8" stroke-width="1.8" fill="none" marker-end="url(#ar)"/>
+  <path d="M1002 230 V259" stroke="#94a3b8" stroke-width="1.8" fill="none" marker-end="url(#ar)"/>
+  <path d="M1278 230 V259" stroke="#94a3b8" stroke-width="1.8" fill="none" marker-end="url(#ar)"/>
+
+  <!-- ② 进程启动 -->
+  <rect x="24" y="416" width="1472" height="246" rx="16" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1.5"/>
+  <text x="46" y="446" font-size="15" font-weight="700" fill="#1e3a8a">② 进程启动 · import 时发生了什么</text>
+
+  <rect x="48" y="468" width="460" height="172" rx="10" fill="#ffffff" stroke="#93c5fd" stroke-width="1.5"/>
+  <text x="278" y="504" text-anchor="middle" font-size="14.5" font-weight="700" fill="#0f172a">core/rag_engine.py</text>
+  <text x="278" y="530" text-anchor="middle" font-size="12" fill="#475569">启动即全量读切片 → jieba → BM25</text>
+  <text x="278" y="554" text-anchor="middle" font-size="12" fill="#475569">检索 = 内存计算 + 一次 Chroma 查询</text>
+  <text x="278" y="578" text-anchor="middle" font-size="11.5" fill="#b45309">重建知识库后必须重启服务</text>
+
+  <rect x="534" y="468" width="460" height="172" rx="10" fill="#ffffff" stroke="#93c5fd" stroke-width="1.5"/>
+  <text x="764" y="504" text-anchor="middle" font-size="14.5" font-weight="700" fill="#0f172a">core/agent_workflow.py</text>
+  <text x="764" y="530" text-anchor="middle" font-size="12" fill="#475569">.env → ChatOpenAI(deepseek-chat)</text>
+  <text x="764" y="554" text-anchor="middle" font-size="12" fill="#475569">8 个节点 + 条件边 → compile</text>
+  <text x="764" y="578" text-anchor="middle" font-size="12" fill="#475569">SqliteSaver → agent_state.db</text>
+
+  <rect x="1020" y="468" width="460" height="172" rx="10" fill="#ffffff" stroke="#93c5fd" stroke-width="1.5"/>
+  <text x="1250" y="504" text-anchor="middle" font-size="14.5" font-weight="700" fill="#0f172a">server/main.py</text>
+  <text x="1250" y="530" text-anchor="middle" font-size="12" fill="#475569">FastAPI 网关 · 127.0.0.1:8000</text>
+  <text x="1250" y="554" text-anchor="middle" font-size="12" fill="#475569">POST /api/chat</text>
+  <text x="1250" y="578" text-anchor="middle" font-size="12" fill="#475569">POST /api/audit/resume</text>
+
+  <!-- ③ 在线问答 -->
+  <rect x="24" y="680" width="1472" height="1140" rx="16" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+  <text x="46" y="710" font-size="15" font-weight="700" fill="#334155">③ 在线问答主链路 · 一次 /api/chat 调用（thread_id 决定读哪份历史）</text>
+
+  <rect x="600" y="726" width="320" height="70" rx="10" fill="#fffbeb" stroke="#f59e0b" stroke-width="1.8"/>
+  <text x="760" y="754" text-anchor="middle" font-size="15" font-weight="700" fill="#92400e">POST /api/chat</text>
+  <text x="760" y="776" text-anchor="middle" font-size="11.5" fill="#92400e">{thread_id, user_id, message, order_id}</text>
+
+  <rect x="560" y="816" width="400" height="66" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
+  <text x="760" y="842" text-anchor="middle" font-size="13" font-weight="600" fill="#0f172a">app_graph.invoke(state, config)</text>
+  <text x="760" y="862" text-anchor="middle" font-size="11.5" fill="#475569">只传本轮 HumanMessage，其余字段沿用 checkpoint</text>
+
+  <rect x="560" y="902" width="400" height="66" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
+  <text x="760" y="928" text-anchor="middle" font-size="13" font-weight="600" fill="#0f172a">checkpointer：按 thread_id 取历史</text>
+  <text x="760" y="948" text-anchor="middle" font-size="11.5" fill="#475569">add_messages 追加，其余字段合并</text>
+
+  <rect x="560" y="988" width="400" height="64" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
+  <text x="760" y="1014" text-anchor="middle" font-size="13" font-weight="600" fill="#0f172a">load_memory</text>
+  <text x="760" y="1034" text-anchor="middle" font-size="11.5" fill="#475569">读 long_term_memory.db 用户画像</text>
+
+  <rect x="560" y="1072" width="400" height="64" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
+  <text x="760" y="1098" text-anchor="middle" font-size="13" font-weight="600" fill="#0f172a">router</text>
+  <text x="760" y="1118" text-anchor="middle" font-size="11.5" fill="#475569">LLM 二分类：consult / refund</text>
+
+  <path d="M760 796 V813" stroke="#94a3b8" stroke-width="1.8" fill="none" marker-end="url(#ar)"/>
+  <path d="M760 882 V899" stroke="#94a3b8" stroke-width="1.8" fill="none" marker-end="url(#ar)"/>
+  <path d="M760 968 V985" stroke="#94a3b8" stroke-width="1.8" fill="none" marker-end="url(#ar)"/>
+  <path d="M760 1052 V1069" stroke="#94a3b8" stroke-width="1.8" fill="none" marker-end="url(#ar)"/>
+  <path d="M760 1136 V1160 H300 V1187" stroke="#94a3b8" stroke-width="1.8" fill="none" marker-end="url(#ar)"/>
+  <path d="M760 1136 V1160 H1220 V1187" stroke="#94a3b8" stroke-width="1.8" fill="none" marker-end="url(#ar)"/>
+  <text x="470" y="1152" text-anchor="middle" font-size="12.5" font-weight="700" fill="#7c3aed">consult</text>
+  <text x="1050" y="1152" text-anchor="middle" font-size="12.5" font-weight="700" fill="#e11d48">refund</text>
+
+  <!-- 咨询分支 -->
+  <rect x="70" y="1190" width="460" height="64" rx="10" fill="#faf5ff" stroke="#a78bfa" stroke-width="1.5"/>
+  <text x="300" y="1216" text-anchor="middle" font-size="13" font-weight="600" fill="#0f172a">query_rewrite</text>
+  <text x="300" y="1238" text-anchor="middle" font-size="11.5" fill="#475569">首轮直通；多轮 LLM 消解代词</text>
+
+  <rect x="70" y="1284" width="460" height="96" rx="10" fill="#faf5ff" stroke="#a78bfa" stroke-width="1.5"/>
+  <text x="300" y="1310" text-anchor="middle" font-size="13" font-weight="600" fill="#0f172a">consult_rag</text>
+  <text x="300" y="1330" text-anchor="middle" font-size="11.5" fill="#475569">search_knowledge_base(q, top_n=2)</text>
+  <text x="300" y="1352" text-anchor="middle" font-size="11.5" fill="#475569">Dense Top5 + BM25 Top5 → RRF 融合</text>
+  <text x="300" y="1370" text-anchor="middle" font-size="11.5" fill="#475569">0.8 × 覆盖率 + 0.2 × 排名 → 阈值 0.35</text>
+
+  <rect x="70" y="1410" width="220" height="66" rx="10" fill="#faf5ff" stroke="#a78bfa" stroke-width="1.5"/>
+  <text x="180" y="1436" text-anchor="middle" font-size="12" font-weight="600" fill="#0f172a">无命中 → 兜底话术</text>
+  <text x="180" y="1456" text-anchor="middle" font-size="10.8" fill="#475569">不调用大模型 · 转人工</text>
+
+  <rect x="310" y="1410" width="220" height="66" rx="10" fill="#faf5ff" stroke="#a78bfa" stroke-width="1.5"/>
+  <text x="420" y="1436" text-anchor="middle" font-size="12" font-weight="600" fill="#0f172a">有命中 → 生成答案</text>
+  <text x="420" y="1456" text-anchor="middle" font-size="10.8" fill="#475569">关键事实带《文件》第X页</text>
+
+  <rect x="70" y="1506" width="460" height="64" rx="10" fill="#faf5ff" stroke="#a78bfa" stroke-width="1.5"/>
+  <text x="300" y="1532" text-anchor="middle" font-size="13" font-weight="600" fill="#0f172a">memory_extractor</text>
+  <text x="300" y="1552" text-anchor="middle" font-size="11" fill="#475569">LLM 抽 JSON → upsert 画像（失败静默）</text>
+
+  <rect x="70" y="1600" width="460" height="58" rx="10" fill="#ecfdf5" stroke="#34d399" stroke-width="1.6"/>
+  <text x="300" y="1626" text-anchor="middle" font-size="13" font-weight="700" fill="#065f46">END → COMPLETED</text>
+  <text x="300" y="1646" text-anchor="middle" font-size="11" fill="#065f46">response + citations + rewritten_query</text>
+
+  <path d="M300 1254 V1281" stroke="#94a3b8" stroke-width="1.8" fill="none" marker-end="url(#ar)"/>
+  <path d="M300 1380 V1395 H180 V1407" stroke="#94a3b8" stroke-width="1.8" fill="none" marker-end="url(#ar)"/>
+  <path d="M300 1380 V1395 H420 V1407" stroke="#94a3b8" stroke-width="1.8" fill="none" marker-end="url(#ar)"/>
+  <path d="M180 1476 V1491 H300 V1503" stroke="#94a3b8" stroke-width="1.8" fill="none" marker-end="url(#ar)"/>
+  <path d="M420 1476 V1491 H300 V1503" stroke="#94a3b8" stroke-width="1.8" fill="none" marker-end="url(#ar)"/>
+  <path d="M300 1570 V1597" stroke="#94a3b8" stroke-width="1.8" fill="none" marker-end="url(#ar)"/>
+
+  <!-- 退费分支 -->
+  <rect x="990" y="1190" width="460" height="88" rx="10" fill="#fff1f2" stroke="#fb7185" stroke-width="1.5"/>
+  <text x="1220" y="1216" text-anchor="middle" font-size="13" font-weight="600" fill="#0f172a">after_sales_agent（工具调用）</text>
+  <text x="1220" y="1236" text-anchor="middle" font-size="10.5" fill="#475569">query_order · check_refund_policy · submit_refund_request</text>
+  <text x="1220" y="1256" text-anchor="middle" font-size="10.5" fill="#475569">模型选工具 → 本地执行 → ToolMessage 回填（≤4 轮）</text>
+
+  <rect x="990" y="1308" width="460" height="64" rx="10" fill="#fff1f2" stroke="#fb7185" stroke-width="1.5"/>
+  <text x="1220" y="1334" text-anchor="middle" font-size="13" font-weight="600" fill="#0f172a">human_approval</text>
+  <text x="1220" y="1354" text-anchor="middle" font-size="10.5" fill="#475569">refund_requested=true 才进入；低风险放行 / 高风险挂起</text>
+
+  <rect x="990" y="1402" width="460" height="64" rx="10" fill="#ffedd5" stroke="#fb923c" stroke-width="1.8"/>
+  <text x="1220" y="1428" text-anchor="middle" font-size="12.5" font-weight="700" fill="#9a3412">挂起 · HTTP 返回 SUSPENDED</text>
+  <text x="1220" y="1448" text-anchor="middle" font-size="11" fill="#9a3412">interrupt_data：订单号 + 原因</text>
+
+  <rect x="990" y="1496" width="460" height="64" rx="10" fill="#ffffff" stroke="#fb923c" stroke-width="1.5"/>
+  <text x="1220" y="1522" text-anchor="middle" font-size="12.5" font-weight="600" fill="#0f172a">POST /api/audit/resume</text>
+  <text x="1220" y="1542" text-anchor="middle" font-size="10.8" fill="#475569">Command(resume={approved, reason})</text>
+
+  <rect x="990" y="1590" width="220" height="72" rx="10" fill="#fff1f2" stroke="#fb7185" stroke-width="1.5"/>
+  <text x="1100" y="1616" text-anchor="middle" font-size="12" font-weight="600" fill="#0f172a">驳回 → 告知原因</text>
+  <text x="1100" y="1636" text-anchor="middle" font-size="10.8" fill="#475569">订单保持 PAID</text>
+
+  <rect x="1230" y="1590" width="220" height="72" rx="10" fill="#fff1f2" stroke="#fb7185" stroke-width="1.5"/>
+  <text x="1340" y="1616" text-anchor="middle" font-size="12" font-weight="600" fill="#0f172a">同意 → execute_refund</text>
+  <text x="1340" y="1636" text-anchor="middle" font-size="10.5" fill="#475569">幂等预占 → REFUNDED → SUCCESS</text>
+
+  <rect x="990" y="1692" width="460" height="58" rx="10" fill="#ecfdf5" stroke="#34d399" stroke-width="1.6"/>
+  <text x="1220" y="1718" text-anchor="middle" font-size="13" font-weight="700" fill="#065f46">END → COMPLETED</text>
+  <text x="1220" y="1738" text-anchor="middle" font-size="11" fill="#065f46">退款成功 / 未通过审核</text>
+
+  <path d="M1220 1278 V1305" stroke="#94a3b8" stroke-width="1.8" fill="none" marker-end="url(#ar)"/>
+  <path d="M1220 1372 V1399" stroke="#94a3b8" stroke-width="1.8" fill="none" marker-end="url(#ar)"/>
+  <path d="M1220 1466 V1493" stroke="#94a3b8" stroke-width="1.8" fill="none" marker-end="url(#ar)"/>
+  <path d="M1220 1560 V1575 H1100 V1587" stroke="#94a3b8" stroke-width="1.8" fill="none" marker-end="url(#ar)"/>
+  <path d="M1220 1560 V1575 H1340 V1587" stroke="#94a3b8" stroke-width="1.8" fill="none" marker-end="url(#ar)"/>
+  <path d="M1100 1662 V1689" stroke="#94a3b8" stroke-width="1.8" fill="none" marker-end="url(#ar)"/>
+  <path d="M1340 1662 V1689" stroke="#94a3b8" stroke-width="1.8" fill="none" marker-end="url(#ar)"/>
+
+  <!-- 图例 -->
+  <text x="40" y="1826" font-size="11.5" fill="#b45309">注：退费分支已改为工具调用（after_sales_agent）；工具只查订单 / 登记申请，打款仍由 human_approval + execute_refund 把关。</text>
+  <text x="40" y="1846" font-size="11.5" fill="#64748b">图例：实线 = 请求主链路；橙色 = 人工审批介入点；虚线框 = 离线产物</text>
+  <text x="40" y="1866" font-size="11.5" fill="#64748b">存储：agent_state.db（会话 / 短期记忆） · long_term_memory.db（画像 / 长期记忆） · refund_records.db（退款流水） · mock_db（内存订单）</text>
+</svg>
