@@ -1,0 +1,10 @@
+{"id": "m01", "query": "我之前退款到哪一步了", "memories": ["订单 ORD_001 已提交退款申请，金额 1999 元，等待人工审核", "喜欢周末上课"], "expect": "等待人工审核"}
+{"id": "m02", "query": "我的基础是零基础还是有基础", "memories": ["画像更新：skill_level 由「零基础」变为「有基础」"], "expect": "画像更新"}
+{"id": "m03", "query": "我一般什么时候上课", "memories": ["希望周末上课", "喜欢保姆级答疑"], "expect": "周末上课"}
+{"id": "m04", "query": "我的学习目标", "memories": ["学习目标：Python 后端开发", "基础：有 Python 语法基础"], "expect": "学习目标"}
+{"id": "m05", "query": "退款成功了吗", "memories": ["订单 ORD_002 退款成功，金额 2999 元", "订单 ORD_001 已提交退款申请"], "expect": "退款成功"}
+{"id": "m06", "query": "人工审核有结果了吗", "memories": ["订单 ORD_003 的退款申请被人工驳回：购买已超 20 天", "订单 ORD_004 退款成功"], "expect": "人工驳回"}
+{"id": "m07", "query": "我担心跟不上进度", "memories": ["担心跟不上进度，希望老师讲慢一点"], "expect": "担心跟不上"}
+{"id": "m08", "query": "今天天气怎么样", "memories": ["希望周末上课", "订单 ORD_002 退款成功"], "expect": null}
+{"id": "m09", "query": "上课时间", "memories": [{"content": "上课时间：周三晚上", "importance": 0.9}, {"content": "上课时间：周末", "importance": 0.2}], "expect": "周三晚上"}
+{"id": "m10", "query": "我的预算是多少", "memories": ["预算 5000 元以内"], "expect": "预算"}

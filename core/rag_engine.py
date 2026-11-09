@@ -4,9 +4,9 @@ import re
 import jieba
 import chromadb
 from rank_bm25 import BM25Okapi
-# 动态定位到项目根目录下的 chroma_db
+# 动态定位到项目根目录下的 chroma_db；测试或部署时可用 CHROMA_DIR 覆盖
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-PERSIST_DIR = os.path.join(BASE_DIR, "chroma_db")
+PERSIST_DIR = os.getenv("CHROMA_DIR", os.path.join(BASE_DIR, "chroma_db"))
 # 条款号查询（"第 3 条"）在 jieba 里会被拆成单字，需要单独保留
 ARTICLE_PATTERN = re.compile(r"第\s*\d+\s*条")
 

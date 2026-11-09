@@ -183,6 +183,7 @@ def default_answer_runner(query, thread_id):
     result = app_graph.invoke({
         "messages": [HumanMessage(content=query)],
         "user_id": "eval_user",
+        "thread_id": thread_id,
         "order_id": None,
         "citations": [],
         "need_human_approval": False,

@@ -41,6 +41,7 @@ def run_chat():
             app_graph.invoke({
                 "messages": [HumanMessage(content=user_input)],
                 "user_id": current_user_id,
+                "thread_id": thread_id,
                 "order_id": current_order_id,
                 "citations": [],
                 "need_human_approval": False,

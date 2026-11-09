@@ -1,187 +1,116 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1520" height="1890" viewBox="0 0 1520 1890" font-family="'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif">
-  <defs>
-    <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7.5" markerHeight="7.5" orient="auto-start-reverse">
-      <path d="M0,0 L10,5 L0,10 Z" fill="#94a3b8"/>
-    </marker>
-  </defs>
-
-  <rect width="1520" height="1890" fill="#fbfcfe"/>
-
-  <!-- 标题 -->
-  <text x="40" y="52" font-size="26" font-weight="700" fill="#0f172a">智学在线教育 Agent · 全链路流程图</text>
-  <text x="40" y="80" font-size="13.5" fill="#64748b">用户一句话 → 意图路由 → 混合检索 RAG / 退费 HITL → 答案返回；含离线建库、进程装配、长短期记忆与幂等落库</text>
-
-  <!-- ① 离线建库 -->
-  <rect x="24" y="98" width="1472" height="300" rx="16" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1.5"/>
-  <text x="46" y="128" font-size="15" font-weight="700" fill="#166534">① 离线建库 · scripts/ingest.py（知识库变更时运行一次）</text>
-
-  <rect x="48" y="150" width="252" height="80" rx="9" fill="#ffffff" stroke="#86efac" stroke-width="1.5"/>
-  <text x="174" y="184" text-anchor="middle" font-size="14.5" font-weight="600" fill="#0f172a">data/*.pdf</text>
-  <text x="174" y="206" text-anchor="middle" font-size="12" fill="#475569">如 edu_policy.pdf</text>
-  <text x="174" y="224" text-anchor="middle" font-size="11" fill="#94a3b8">子目录 distractors 不入库</text>
-
-  <rect x="324" y="150" width="252" height="80" rx="9" fill="#ffffff" stroke="#86efac" stroke-width="1.5"/>
-  <text x="450" y="184" text-anchor="middle" font-size="13.5" font-weight="600" fill="#0f172a">PyPDFLoader</text>
-  <text x="450" y="206" text-anchor="middle" font-size="12" fill="#475569">逐页解析，每页一个 Document</text>
-
-  <rect x="600" y="150" width="252" height="80" rx="9" fill="#ffffff" stroke="#86efac" stroke-width="1.5"/>
-  <text x="726" y="184" text-anchor="middle" font-size="13" font-weight="600" fill="#0f172a">RecursiveCharacterTextSplitter</text>
-  <text x="726" y="206" text-anchor="middle" font-size="12" fill="#475569">chunk 300 / overlap 50</text>
-  <text x="726" y="224" text-anchor="middle" font-size="11" fill="#94a3b8">按段落 → 句子递归切分</text>
-
-  <rect x="876" y="150" width="252" height="80" rx="9" fill="#ffffff" stroke="#86efac" stroke-width="1.5"/>
-  <text x="1002" y="184" text-anchor="middle" font-size="13.5" font-weight="600" fill="#0f172a">写入切片元数据</text>
-  <text x="1002" y="206" text-anchor="middle" font-size="12" fill="#475569">source_file + page + 1</text>
-
-  <rect x="1152" y="150" width="252" height="80" rx="9" fill="#ffffff" stroke="#86efac" stroke-width="1.5"/>
-  <text x="1278" y="184" text-anchor="middle" font-size="13.5" font-weight="600" fill="#0f172a">重建 Chroma 集合</text>
-  <text x="1278" y="206" text-anchor="middle" font-size="12" fill="#475569">edu_pdf_knowledge（6 片）</text>
-  <text x="1278" y="224" text-anchor="middle" font-size="11" fill="#94a3b8">删除后全量重建，不做增量</text>
-
-  <rect x="876" y="262" width="252" height="58" rx="9" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1.3" stroke-dasharray="5 4"/>
-  <text x="1002" y="288" text-anchor="middle" font-size="12.5" font-weight="600" fill="#334155">data/processed_chunks.md</text>
-  <text x="1002" y="306" text-anchor="middle" font-size="11" fill="#64748b">切片台账 · 供人工审查</text>
-
-  <rect x="1152" y="262" width="252" height="58" rx="9" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1.3" stroke-dasharray="5 4"/>
-  <text x="1278" y="288" text-anchor="middle" font-size="12.5" font-weight="600" fill="#334155">chroma_db/</text>
-  <text x="1278" y="306" text-anchor="middle" font-size="11" fill="#64748b">向量 + 元数据 · 持久化</text>
-
-  <path d="M300 190 H321" stroke="#94a3b8" stroke-width="1.8" fill="none" marker-end="url(#ar)"/>
-  <path d="M576 190 H597" stroke="#94a3b8" stroke-width="1.8" fill="none" marker-end="url(#ar)"/>
-  <path d="M852 190 H873" stroke="#94a3b8" stroke-width="1.8" fill="none" marker-end="url(#ar)"/>
-  <path d="M1128 190 H1149" stroke="#94a3b8" stroke-width="1.8" fill="none" marker-end="url(#ar)"/>
-  <path d="M1002 230 V259" stroke="#94a3b8" stroke-width="1.8" fill="none" marker-end="url(#ar)"/>
-  <path d="M1278 230 V259" stroke="#94a3b8" stroke-width="1.8" fill="none" marker-end="url(#ar)"/>
-
-  <!-- ② 进程启动 -->
-  <rect x="24" y="416" width="1472" height="246" rx="16" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1.5"/>
-  <text x="46" y="446" font-size="15" font-weight="700" fill="#1e3a8a">② 进程启动 · import 时发生了什么</text>
-
-  <rect x="48" y="468" width="460" height="172" rx="10" fill="#ffffff" stroke="#93c5fd" stroke-width="1.5"/>
-  <text x="278" y="504" text-anchor="middle" font-size="14.5" font-weight="700" fill="#0f172a">core/rag_engine.py</text>
-  <text x="278" y="530" text-anchor="middle" font-size="12" fill="#475569">启动即全量读切片 → jieba → BM25</text>
-  <text x="278" y="554" text-anchor="middle" font-size="12" fill="#475569">检索 = 内存计算 + 一次 Chroma 查询</text>
-  <text x="278" y="578" text-anchor="middle" font-size="11.5" fill="#b45309">重建知识库后必须重启服务</text>
-
-  <rect x="534" y="468" width="460" height="172" rx="10" fill="#ffffff" stroke="#93c5fd" stroke-width="1.5"/>
-  <text x="764" y="504" text-anchor="middle" font-size="14.5" font-weight="700" fill="#0f172a">core/agent_workflow.py</text>
-  <text x="764" y="530" text-anchor="middle" font-size="12" fill="#475569">.env → ChatOpenAI(deepseek-chat)</text>
-  <text x="764" y="554" text-anchor="middle" font-size="12" fill="#475569">8 个节点 + 条件边 → compile</text>
-  <text x="764" y="578" text-anchor="middle" font-size="12" fill="#475569">SqliteSaver → agent_state.db</text>
-
-  <rect x="1020" y="468" width="460" height="172" rx="10" fill="#ffffff" stroke="#93c5fd" stroke-width="1.5"/>
-  <text x="1250" y="504" text-anchor="middle" font-size="14.5" font-weight="700" fill="#0f172a">server/main.py</text>
-  <text x="1250" y="530" text-anchor="middle" font-size="12" fill="#475569">FastAPI 网关 · 127.0.0.1:8000</text>
-  <text x="1250" y="554" text-anchor="middle" font-size="12" fill="#475569">POST /api/chat</text>
-  <text x="1250" y="578" text-anchor="middle" font-size="12" fill="#475569">POST /api/audit/resume</text>
-
-  <!-- ③ 在线问答 -->
-  <rect x="24" y="680" width="1472" height="1140" rx="16" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
-  <text x="46" y="710" font-size="15" font-weight="700" fill="#334155">③ 在线问答主链路 · 一次 /api/chat 调用（thread_id 决定读哪份历史）</text>
-
-  <rect x="600" y="726" width="320" height="70" rx="10" fill="#fffbeb" stroke="#f59e0b" stroke-width="1.8"/>
-  <text x="760" y="754" text-anchor="middle" font-size="15" font-weight="700" fill="#92400e">POST /api/chat</text>
-  <text x="760" y="776" text-anchor="middle" font-size="11.5" fill="#92400e">{thread_id, user_id, message, order_id}</text>
-
-  <rect x="560" y="816" width="400" height="66" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
-  <text x="760" y="842" text-anchor="middle" font-size="13" font-weight="600" fill="#0f172a">app_graph.invoke(state, config)</text>
-  <text x="760" y="862" text-anchor="middle" font-size="11.5" fill="#475569">只传本轮 HumanMessage，其余字段沿用 checkpoint</text>
-
-  <rect x="560" y="902" width="400" height="66" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
-  <text x="760" y="928" text-anchor="middle" font-size="13" font-weight="600" fill="#0f172a">checkpointer：按 thread_id 取历史</text>
-  <text x="760" y="948" text-anchor="middle" font-size="11.5" fill="#475569">add_messages 追加，其余字段合并</text>
-
-  <rect x="560" y="988" width="400" height="64" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
-  <text x="760" y="1014" text-anchor="middle" font-size="13" font-weight="600" fill="#0f172a">load_memory</text>
-  <text x="760" y="1034" text-anchor="middle" font-size="11.5" fill="#475569">读 long_term_memory.db 用户画像</text>
-
-  <rect x="560" y="1072" width="400" height="64" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
-  <text x="760" y="1098" text-anchor="middle" font-size="13" font-weight="600" fill="#0f172a">router</text>
-  <text x="760" y="1118" text-anchor="middle" font-size="11.5" fill="#475569">LLM 二分类：consult / refund</text>
-
-  <path d="M760 796 V813" stroke="#94a3b8" stroke-width="1.8" fill="none" marker-end="url(#ar)"/>
-  <path d="M760 882 V899" stroke="#94a3b8" stroke-width="1.8" fill="none" marker-end="url(#ar)"/>
-  <path d="M760 968 V985" stroke="#94a3b8" stroke-width="1.8" fill="none" marker-end="url(#ar)"/>
-  <path d="M760 1052 V1069" stroke="#94a3b8" stroke-width="1.8" fill="none" marker-end="url(#ar)"/>
-  <path d="M760 1136 V1160 H300 V1187" stroke="#94a3b8" stroke-width="1.8" fill="none" marker-end="url(#ar)"/>
-  <path d="M760 1136 V1160 H1220 V1187" stroke="#94a3b8" stroke-width="1.8" fill="none" marker-end="url(#ar)"/>
-  <text x="470" y="1152" text-anchor="middle" font-size="12.5" font-weight="700" fill="#7c3aed">consult</text>
-  <text x="1050" y="1152" text-anchor="middle" font-size="12.5" font-weight="700" fill="#e11d48">refund</text>
-
-  <!-- 咨询分支 -->
-  <rect x="70" y="1190" width="460" height="64" rx="10" fill="#faf5ff" stroke="#a78bfa" stroke-width="1.5"/>
-  <text x="300" y="1216" text-anchor="middle" font-size="13" font-weight="600" fill="#0f172a">query_rewrite</text>
-  <text x="300" y="1238" text-anchor="middle" font-size="11.5" fill="#475569">首轮直通；多轮 LLM 消解代词</text>
-
-  <rect x="70" y="1284" width="460" height="96" rx="10" fill="#faf5ff" stroke="#a78bfa" stroke-width="1.5"/>
-  <text x="300" y="1310" text-anchor="middle" font-size="13" font-weight="600" fill="#0f172a">consult_rag</text>
-  <text x="300" y="1330" text-anchor="middle" font-size="11.5" fill="#475569">search_knowledge_base(q, top_n=4)</text>
-  <text x="300" y="1352" text-anchor="middle" font-size="11.5" fill="#475569">Dense Top10 + BM25 Top10 → RRF 前 12</text>
-  <text x="300" y="1370" text-anchor="middle" font-size="11.5" fill="#475569">0.8 × 覆盖率 + 0.2 × 排名 → 阈值 0.35</text>
-
-  <rect x="70" y="1410" width="220" height="66" rx="10" fill="#faf5ff" stroke="#a78bfa" stroke-width="1.5"/>
-  <text x="180" y="1436" text-anchor="middle" font-size="12" font-weight="600" fill="#0f172a">无命中 → 兜底话术</text>
-  <text x="180" y="1456" text-anchor="middle" font-size="10.8" fill="#475569">不调用大模型 · 转人工</text>
-
-  <rect x="310" y="1410" width="220" height="66" rx="10" fill="#faf5ff" stroke="#a78bfa" stroke-width="1.5"/>
-  <text x="420" y="1436" text-anchor="middle" font-size="12" font-weight="600" fill="#0f172a">有命中 → 生成答案</text>
-  <text x="420" y="1456" text-anchor="middle" font-size="10.8" fill="#475569">关键事实带《文件》第X页</text>
-
-  <rect x="70" y="1506" width="460" height="64" rx="10" fill="#faf5ff" stroke="#a78bfa" stroke-width="1.5"/>
-  <text x="300" y="1532" text-anchor="middle" font-size="13" font-weight="600" fill="#0f172a">memory_extractor</text>
-  <text x="300" y="1552" text-anchor="middle" font-size="11" fill="#475569">LLM 抽 JSON → upsert 画像（失败静默）</text>
-
-  <rect x="70" y="1600" width="460" height="58" rx="10" fill="#ecfdf5" stroke="#34d399" stroke-width="1.6"/>
-  <text x="300" y="1626" text-anchor="middle" font-size="13" font-weight="700" fill="#065f46">END → COMPLETED</text>
-  <text x="300" y="1646" text-anchor="middle" font-size="11" fill="#065f46">response + citations + rewritten_query</text>
-
-  <path d="M300 1254 V1281" stroke="#94a3b8" stroke-width="1.8" fill="none" marker-end="url(#ar)"/>
-  <path d="M300 1380 V1395 H180 V1407" stroke="#94a3b8" stroke-width="1.8" fill="none" marker-end="url(#ar)"/>
-  <path d="M300 1380 V1395 H420 V1407" stroke="#94a3b8" stroke-width="1.8" fill="none" marker-end="url(#ar)"/>
-  <path d="M180 1476 V1491 H300 V1503" stroke="#94a3b8" stroke-width="1.8" fill="none" marker-end="url(#ar)"/>
-  <path d="M420 1476 V1491 H300 V1503" stroke="#94a3b8" stroke-width="1.8" fill="none" marker-end="url(#ar)"/>
-  <path d="M300 1570 V1597" stroke="#94a3b8" stroke-width="1.8" fill="none" marker-end="url(#ar)"/>
-
-  <!-- 退费分支 -->
-  <rect x="990" y="1190" width="460" height="88" rx="10" fill="#fff1f2" stroke="#fb7185" stroke-width="1.5"/>
-  <text x="1220" y="1216" text-anchor="middle" font-size="13" font-weight="600" fill="#0f172a">after_sales_agent（工具调用）</text>
-  <text x="1220" y="1236" text-anchor="middle" font-size="10.5" fill="#475569">query_order · check_refund_policy · submit_refund_request</text>
-  <text x="1220" y="1256" text-anchor="middle" font-size="10.5" fill="#475569">模型选工具 → 本地执行 → ToolMessage 回填（≤4 轮）</text>
-
-  <rect x="990" y="1308" width="460" height="64" rx="10" fill="#fff1f2" stroke="#fb7185" stroke-width="1.5"/>
-  <text x="1220" y="1334" text-anchor="middle" font-size="13" font-weight="600" fill="#0f172a">human_approval</text>
-  <text x="1220" y="1354" text-anchor="middle" font-size="10.5" fill="#475569">refund_requested=true 才进入；低风险放行 / 高风险挂起</text>
-
-  <rect x="990" y="1402" width="460" height="64" rx="10" fill="#ffedd5" stroke="#fb923c" stroke-width="1.8"/>
-  <text x="1220" y="1428" text-anchor="middle" font-size="12.5" font-weight="700" fill="#9a3412">挂起 · HTTP 返回 SUSPENDED</text>
-  <text x="1220" y="1448" text-anchor="middle" font-size="11" fill="#9a3412">interrupt_data：订单号 + 原因</text>
-
-  <rect x="990" y="1496" width="460" height="64" rx="10" fill="#ffffff" stroke="#fb923c" stroke-width="1.5"/>
-  <text x="1220" y="1522" text-anchor="middle" font-size="12.5" font-weight="600" fill="#0f172a">POST /api/audit/resume</text>
-  <text x="1220" y="1542" text-anchor="middle" font-size="10.8" fill="#475569">Command(resume={approved, reason})</text>
-
-  <rect x="990" y="1590" width="220" height="72" rx="10" fill="#fff1f2" stroke="#fb7185" stroke-width="1.5"/>
-  <text x="1100" y="1616" text-anchor="middle" font-size="12" font-weight="600" fill="#0f172a">驳回 → 告知原因</text>
-  <text x="1100" y="1636" text-anchor="middle" font-size="10.8" fill="#475569">订单保持 PAID</text>
-
-  <rect x="1230" y="1590" width="220" height="72" rx="10" fill="#fff1f2" stroke="#fb7185" stroke-width="1.5"/>
-  <text x="1340" y="1616" text-anchor="middle" font-size="12" font-weight="600" fill="#0f172a">同意 → execute_refund</text>
-  <text x="1340" y="1636" text-anchor="middle" font-size="10.5" fill="#475569">幂等预占 → REFUNDED → SUCCESS</text>
-
-  <rect x="990" y="1692" width="460" height="58" rx="10" fill="#ecfdf5" stroke="#34d399" stroke-width="1.6"/>
-  <text x="1220" y="1718" text-anchor="middle" font-size="13" font-weight="700" fill="#065f46">END → COMPLETED</text>
-  <text x="1220" y="1738" text-anchor="middle" font-size="11" fill="#065f46">退款成功 / 未通过审核</text>
-
-  <path d="M1220 1278 V1305" stroke="#94a3b8" stroke-width="1.8" fill="none" marker-end="url(#ar)"/>
-  <path d="M1220 1372 V1399" stroke="#94a3b8" stroke-width="1.8" fill="none" marker-end="url(#ar)"/>
-  <path d="M1220 1466 V1493" stroke="#94a3b8" stroke-width="1.8" fill="none" marker-end="url(#ar)"/>
-  <path d="M1220 1560 V1575 H1100 V1587" stroke="#94a3b8" stroke-width="1.8" fill="none" marker-end="url(#ar)"/>
-  <path d="M1220 1560 V1575 H1340 V1587" stroke="#94a3b8" stroke-width="1.8" fill="none" marker-end="url(#ar)"/>
-  <path d="M1100 1662 V1689" stroke="#94a3b8" stroke-width="1.8" fill="none" marker-end="url(#ar)"/>
-  <path d="M1340 1662 V1689" stroke="#94a3b8" stroke-width="1.8" fill="none" marker-end="url(#ar)"/>
-
-  <!-- 图例 -->
-  <text x="40" y="1826" font-size="11.5" fill="#b45309">注：退费分支已改为工具调用（after_sales_agent）；工具只查订单 / 登记申请，打款仍由 human_approval + execute_refund 把关。</text>
-  <text x="40" y="1846" font-size="11.5" fill="#64748b">图例：实线 = 请求主链路；橙色 = 人工审批介入点；虚线框 = 离线产物</text>
-  <text x="40" y="1866" font-size="11.5" fill="#64748b">存储：agent_state.db（会话 / 短期记忆） · long_term_memory.db（画像 / 长期记忆） · refund_records.db（退款流水） · mock_db（内存订单）</text>
+<svg xmlns="http://www.w3.org/2000/svg" width="1840" height="1580" viewBox="0 0 1840 1580">
+<defs>
+<marker id="arrow-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#4a7fb5"/></marker>
+<marker id="arrow-red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#b85c52"/></marker>
+<marker id="arrow-purple" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#7b5ea7"/></marker>
+<marker id="arrow-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#4f9464"/></marker>
+<marker id="arrow-yellow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#b8912f"/></marker>
+<marker id="arrow-gray" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#6b7280"/></marker>
+</defs>
+<rect width="1840" height="1580" fill="#ffffff"/>
+<text x="60" y="58" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="34" font-weight="bold" fill="#0f2b46" text-anchor="start">教育客服 Agent：一次提问从进入到回答的完整链路</text>
+<text x="60" y="92" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="15" font-weight="normal" fill="#5b6b7c" text-anchor="start">LangGraph 状态机 · 混合检索 RAG · 工具调用 · 人工审批 · 长期记忆</text>
+<rect x="620" y="120" width="600" height="86" rx="12" fill="#eef4fa" stroke="#4a7fb5" stroke-width="1.8"/>
+<text x="920" y="153" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="20" font-weight="bold" fill="#173a5e" text-anchor="middle">学员提问</text>
+<text x="920" y="181" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="14" font-weight="normal" fill="#31577a" text-anchor="middle">CLI: interactive_cli.py ｜ HTTP: POST /api/chat</text>
+<path d="M 920,206 L 920,246" fill="none" stroke="#4a7fb5" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#arrow-blue)"/>
+<rect x="620" y="246" width="600" height="92" rx="12" fill="#eef4fa" stroke="#4a7fb5" stroke-width="1.8"/>
+<text x="920.0" y="277" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="18" font-weight="bold" fill="#102a43" text-anchor="middle">① load_memory_node</text>
+<text x="920.0" y="304" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="14" font-weight="normal" fill="#243447" text-anchor="middle">读画像 user_profiles（长期记忆库）</text>
+<text x="920.0" y="326" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="14" font-weight="normal" fill="#2f6f5e" text-anchor="middle">清空本轮 tool_events；画像写入 State</text>
+<path d="M 920,338 L 920,370" fill="none" stroke="#4a7fb5" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#arrow-blue)"/>
+<polygon points="920,370.0 1080.0,430 920,490.0 760.0,430" fill="#fff8e1" stroke="#b8912f" stroke-width="1.8"/>
+<text x="920" y="424" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="17" font-weight="bold" fill="#4a3a12" text-anchor="middle">② router_node</text>
+<text x="920" y="451" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="13" font-weight="normal" fill="#6b5a2a" text-anchor="middle">咨询还是退款？</text>
+<path d="M 760,430 L 360,430 L 360,520" fill="none" stroke="#4a7fb5" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#arrow-blue)"/>
+<text x="545" y="416" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="13" font-weight="bold" fill="#4a7fb5" text-anchor="middle" stroke="#ffffff" stroke-width="3" paint-order="stroke">consult</text>
+<rect x="100" y="520" width="520" height="100" rx="12" fill="#eef4fa" stroke="#4a7fb5" stroke-width="1.8"/>
+<text x="360.0" y="551" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="18" font-weight="bold" fill="#102a43" text-anchor="middle">③ query_rewrite_node</text>
+<text x="360.0" y="578" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="14" font-weight="normal" fill="#243447" text-anchor="middle">多轮消解代词（1000 token 窗口）</text>
+<text x="360.0" y="600" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="14" font-weight="normal" fill="#243447" text-anchor="middle">首轮无指代 → 直通</text>
+<path d="M 360,620 L 360,660" fill="none" stroke="#4a7fb5" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#arrow-blue)"/>
+<rect x="100" y="660" width="520" height="220" rx="12" fill="#eef4fa" stroke="#4a7fb5" stroke-width="1.8"/>
+<text x="360.0" y="691" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="18" font-weight="bold" fill="#102a43" text-anchor="middle">④ consult_rag_node</text>
+<text x="360.0" y="718" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="14" font-weight="normal" fill="#243447" text-anchor="middle">BM25 + 向量各 Top10</text>
+<text x="360.0" y="740" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="14" font-weight="normal" fill="#243447" text-anchor="middle">→ RRF 融合前 12 → 覆盖率精排 0.8 : 0.2</text>
+<text x="360.0" y="762" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="14" font-weight="normal" fill="#243447" text-anchor="middle">→ 阈值 0.35 过滤 → 取 Top4</text>
+<text x="360.0" y="784" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="14" font-weight="normal" fill="#2f6f5e" text-anchor="middle">注入：学员画像 + Top3 情景记忆</text>
+<text x="360.0" y="806" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="14" font-weight="normal" fill="#243447" text-anchor="middle">＋ 最近 5 条对话 → 生成答案</text>
+<text x="360.0" y="828" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="14" font-weight="normal" fill="#6b7280" text-anchor="middle">无命中 → 固定话术转人工，不调模型</text>
+<path d="M 360,880 L 360,915" fill="none" stroke="#4a7fb5" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#arrow-blue)"/>
+<rect x="100" y="915" width="520" height="104" rx="12" fill="#eef4fa" stroke="#4a7fb5" stroke-width="1.8"/>
+<text x="360.0" y="946" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="18" font-weight="bold" fill="#102a43" text-anchor="middle">⑤ memory_extractor_node</text>
+<text x="360.0" y="973" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="14" font-weight="normal" fill="#243447" text-anchor="middle">抽取画像并合并写入</text>
+<text x="360.0" y="995" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="14" font-weight="normal" fill="#2f6f5e" text-anchor="middle">覆盖旧值 → 记 profile_change 事件</text>
+<path d="M 360,1019 L 360,1054" fill="none" stroke="#4a7fb5" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#arrow-blue)"/>
+<rect x="100" y="1054" width="520" height="90" rx="12" fill="#eaf7ee" stroke="#4f9464" stroke-width="1.8"/>
+<text x="360.0" y="1085" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="18" font-weight="bold" fill="#1f5132" text-anchor="middle">END 咨询</text>
+<text x="360.0" y="1117" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="14" font-weight="normal" fill="#2f6b45" text-anchor="middle">答案 + 引用 [《文件》第 X 页]</text>
+<path d="M 1080,430 L 1450,430 L 1450,520" fill="none" stroke="#b85c52" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#arrow-red)"/>
+<text x="1265" y="416" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="13" font-weight="bold" fill="#b85c52" text-anchor="middle" stroke="#ffffff" stroke-width="3" paint-order="stroke">refund / 其他</text>
+<rect x="1180" y="520" width="540" height="186" rx="12" fill="#fdf0ef" stroke="#b85c52" stroke-width="1.8"/>
+<text x="1450.0" y="551" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="18" font-weight="bold" fill="#102a43" text-anchor="middle">④&#x27; after_sales_agent_node</text>
+<text x="1450.0" y="578" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="14" font-weight="normal" fill="#243447" text-anchor="middle">LLM 自主选择并调用工具</text>
+<text x="1450.0" y="600" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="14" font-weight="normal" fill="#243447" text-anchor="middle">4 个订单：list / query / policy / submit</text>
+<text x="1450.0" y="622" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="14" font-weight="normal" fill="#243447" text-anchor="middle">3 个记忆：get_profile / save / search</text>
+<text x="1450.0" y="644" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="14" font-weight="normal" fill="#2f6f5e" text-anchor="middle">画像进 System Prompt；最多 4 轮</text>
+<text x="1450.0" y="666" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="14" font-weight="normal" fill="#6b7280" text-anchor="middle">明确退款未提交 → 确定性兜底</text>
+<path d="M 1450,706 L 1450,742" fill="none" stroke="#b85c52" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#arrow-red)"/>
+<polygon points="1450,742.0 1620.0,800 1450,858.0 1280.0,800" fill="#fff8e1" stroke="#b8912f" stroke-width="1.8"/>
+<text x="1450" y="794" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="17" font-weight="bold" fill="#4a3a12" text-anchor="middle">已登记退款申请？</text>
+<text x="1450" y="821" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="13" font-weight="normal" fill="#6b5a2a" text-anchor="middle">refund_requested</text>
+<path d="M 1280,800 L 1000,800" fill="none" stroke="#b85c52" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#arrow-red)"/>
+<text x="1140" y="786" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="13" font-weight="bold" fill="#b85c52" text-anchor="middle" stroke="#ffffff" stroke-width="3" paint-order="stroke">否</text>
+<rect x="700" y="746" width="300" height="96" rx="12" fill="#eaf7ee" stroke="#4f9464" stroke-width="1.8"/>
+<text x="850.0" y="777" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="18" font-weight="bold" fill="#1f5132" text-anchor="middle">END 售后</text>
+<text x="850.0" y="809" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="14" font-weight="normal" fill="#2f6b45" text-anchor="middle">直接回答（不退款）</text>
+<path d="M 1450,858 L 1450,896" fill="none" stroke="#b85c52" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#arrow-red)"/>
+<text x="1466" y="881" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="13" font-weight="bold" fill="#b85c52" text-anchor="middle" stroke="#ffffff" stroke-width="3" paint-order="stroke">是</text>
+<polygon points="1450,896.0 1630.0,954 1450,1012.0 1270.0,954" fill="#fff8e1" stroke="#b8912f" stroke-width="1.8"/>
+<text x="1450" y="948" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="17" font-weight="bold" fill="#4a3a12" text-anchor="middle">需要人工审批？</text>
+<text x="1450" y="975" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="13" font-weight="normal" fill="#6b5a2a" text-anchor="middle">超 7 天 或 进度 &gt; 10%</text>
+<path d="M 1450,1012 L 1450,1050" fill="none" stroke="#b85c52" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#arrow-red)"/>
+<text x="1466" y="1035" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="13" font-weight="bold" fill="#b85c52" text-anchor="middle" stroke="#ffffff" stroke-width="3" paint-order="stroke">是（高风险）</text>
+<rect x="1180" y="1050" width="540" height="118" rx="12" fill="#f3eefb" stroke="#7b5ea7" stroke-width="1.8"/>
+<text x="1450.0" y="1081" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="18" font-weight="bold" fill="#3f2a63" text-anchor="middle">human_approval_node</text>
+<text x="1450.0" y="1102" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="13" font-weight="normal" fill="#243447" text-anchor="middle">interrupt() 挂起本轮，状态落盘</text>
+<text x="1450.0" y="1121" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="13" font-weight="normal" fill="#243447" text-anchor="middle">POST /api/audit/resume 恢复</text>
+<text x="1450.0" y="1140" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="13" font-weight="normal" fill="#6b5a2a" text-anchor="middle">驳回 → 写记忆 + END 驳回话术</text>
+<path d="M 1630,954 L 1760,954 L 1760,1240 L 1720,1240" fill="none" stroke="#b85c52" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#arrow-red)"/>
+<text x="1645" y="940" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="13" font-weight="bold" fill="#b85c52" text-anchor="middle" stroke="#ffffff" stroke-width="3" paint-order="stroke">否（低风险）</text>
+<path d="M 1450,1168 L 1450,1218" fill="none" stroke="#7b5ea7" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#arrow-purple)"/>
+<text x="1466" y="1195" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="13" font-weight="bold" fill="#7b5ea7" text-anchor="middle" stroke="#ffffff" stroke-width="3" paint-order="stroke">approved</text>
+<rect x="1180" y="1218" width="540" height="130" rx="12" fill="#fdf0ef" stroke="#b85c52" stroke-width="1.8"/>
+<text x="1450.0" y="1249" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="18" font-weight="bold" fill="#102a43" text-anchor="middle">⑥ execute_refund_node</text>
+<text x="1450.0" y="1276" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="14" font-weight="normal" fill="#243447" text-anchor="middle">二次校验归属 → 预占 PROCESSING</text>
+<text x="1450.0" y="1298" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="14" font-weight="normal" fill="#243447" text-anchor="middle">订单 REFUNDED → 标记 SUCCESS</text>
+<text x="1450.0" y="1320" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="14" font-weight="normal" fill="#2f6f5e" text-anchor="middle">成功 → 写一条退款记忆</text>
+<path d="M 1180,1109 L 1000,1109" fill="none" stroke="#b85c52" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#arrow-red)"/>
+<text x="1090" y="1095" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="13" font-weight="bold" fill="#b85c52" text-anchor="middle" stroke="#ffffff" stroke-width="3" paint-order="stroke">rejected</text>
+<rect x="700" y="1050" width="300" height="96" rx="12" fill="#eaf7ee" stroke="#4f9464" stroke-width="1.8"/>
+<text x="850.0" y="1081" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="18" font-weight="bold" fill="#1f5132" text-anchor="middle">END 驳回</text>
+<text x="850.0" y="1113" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="14" font-weight="normal" fill="#2f6b45" text-anchor="middle">「未通过人工审核」</text>
+<path d="M 1450,1348 L 1450,1368" fill="none" stroke="#4f9464" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#arrow-green)"/>
+<rect x="1180" y="1368" width="540" height="84" rx="12" fill="#eaf7ee" stroke="#4f9464" stroke-width="1.8"/>
+<text x="1450.0" y="1399" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="18" font-weight="bold" fill="#1f5132" text-anchor="middle">END 退款</text>
+<text x="1450.0" y="1431" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="14" font-weight="normal" fill="#2f6b45" text-anchor="middle">退款成功，金额原路退回</text>
+<rect x="100" y="1180" width="520" height="210" rx="12" fill="#f4faf7" stroke="#4f9d8a" stroke-width="1.8" stroke-dasharray="7 5"/>
+<text x="360" y="1216" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="17" font-weight="bold" fill="#1f5132" text-anchor="middle">长期记忆库 long_term_memory.db</text>
+<text x="360" y="1248" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="13.5" font-weight="normal" fill="#2f5f50" text-anchor="middle">user_profiles：画像（目标 / 基础 / 偏好）</text>
+<text x="360" y="1273" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="13.5" font-weight="normal" fill="#2f5f50" text-anchor="middle">user_memories：退款、笔记、画像变更事件</text>
+<text x="360" y="1298" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="13.5" font-weight="normal" fill="#2f5f50" text-anchor="middle">读：load_memory / consult_rag / 售后工具</text>
+<text x="360" y="1323" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="13.5" font-weight="normal" fill="#2f5f50" text-anchor="middle">写：memory_extractor / 退款节点 / save_memory</text>
+<text x="360" y="1348" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="13.5" font-weight="normal" fill="#2f5f50" text-anchor="middle">检索：0.65 词重合 + 0.25 新鲜度 + 0.10 重要性</text>
+<rect x="100" y="1466" width="18" height="18" rx="4" fill="#4a7fb5"/>
+<text x="128" y="1481" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="13.5" font-weight="normal" fill="#4b5563" text-anchor="start">咨询链路</text>
+<rect x="280" y="1466" width="18" height="18" rx="4" fill="#b85c52"/>
+<text x="308" y="1481" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="13.5" font-weight="normal" fill="#4b5563" text-anchor="start">退费链路</text>
+<rect x="460" y="1466" width="18" height="18" rx="4" fill="#b8912f"/>
+<text x="488" y="1481" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="13.5" font-weight="normal" fill="#4b5563" text-anchor="start">判定节点</text>
+<rect x="640" y="1466" width="18" height="18" rx="4" fill="#7b5ea7"/>
+<text x="668" y="1481" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="13.5" font-weight="normal" fill="#4b5563" text-anchor="start">人工审批</text>
+<rect x="820" y="1466" width="18" height="18" rx="4" fill="#4f9464"/>
+<text x="848" y="1481" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="13.5" font-weight="normal" fill="#4b5563" text-anchor="start">结束</text>
+<text x="100" y="1516" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="13" font-weight="normal" fill="#5b6b7c" text-anchor="start">状态：thread_id → agent_state.db；interrupt 后可用 POST /api/audit/resume 跨进程恢复。</text>
+<text x="100" y="1542" font-family="Microsoft YaHei, Segoe UI, sans-serif" font-size="13" font-weight="normal" fill="#5b6b7c" text-anchor="start">记忆：画像全量注入；情景记忆按问题检索 Top3；与文档冲突时以文档为准。</text>
 </svg>

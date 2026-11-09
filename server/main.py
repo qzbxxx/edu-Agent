@@ -13,6 +13,7 @@ from langchain_core.messages import HumanMessage
 from core.agent_workflow import app_graph
 from langgraph.types import Command
 from server import mock_db, refund_store
+from core import memory_manager
 import uvicorn
 
 app = FastAPI(title="Education Agent Engine")
@@ -36,6 +37,7 @@ def chat(req: ChatRequest):
     result = app_graph.invoke({
         "messages": [HumanMessage(content=req.message)],
         "user_id": req.user_id,
+        "thread_id": req.thread_id,
         "order_id": req.order_id,
         "citations": [],
         "need_human_approval": False,
@@ -79,6 +81,39 @@ def resume_audit(req: ResumeRequest):
         "status": "COMPLETED",
         "response": result.get("final_response")
     }
+
+
+# ---------- 长期记忆管理：查看 / 删除单条 / 遗忘 ----------
+@app.get("/api/memory/{user_id}")
+def get_memory(user_id: str, limit: int = 20):
+    """查看用户画像与最近记忆"""
+    return {
+        "user_id": user_id,
+        "profile": memory_manager.get_user_long_term_memory(user_id),
+        "memories": memory_manager.list_user_memories(user_id, limit=limit),
+    }
+
+
+@app.delete("/api/memory/{user_id}/items/{memory_id}")
+def delete_memory(user_id: str, memory_id: int):
+    """删除一条记忆；带 user_id 校验，不能删别人的"""
+    if not memory_manager.delete_user_memory(user_id, memory_id):
+        raise HTTPException(status_code=404, detail="记忆不存在或不属于该用户")
+    return {"status": "DELETED", "memory_id": memory_id}
+
+
+class PruneRequest(BaseModel):
+    days: int = 90
+    min_importance: float = 0.8
+
+
+@app.post("/api/memory/{user_id}/prune")
+def prune_memory(user_id: str, req: PruneRequest):
+    """遗忘接口：删除超过 days 天且重要性低于 min_importance 的记忆"""
+    deleted = memory_manager.prune_user_memories(
+        user_id, days=req.days, min_importance=req.min_importance
+    )
+    return {"status": "PRUNED", "deleted": deleted}
 
 # ---------- 调试接口：方便在 /docs 里直接测工具调用与 HITL ----------
 # 默认开启；部署到线上时设置 ENABLE_DEBUG_API=0 关闭
